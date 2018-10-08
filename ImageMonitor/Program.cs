@@ -23,7 +23,7 @@ namespace ImageMonitor
 
         //private const string ModelDirectory = @"c:\users\nick\downloads\tensor\ssd_mobilenet_v2_coco_2018_03_29";
         //private const string CatalogFile = @"c:\users\nick\Downloads\tensor\mscoco_label_map.pbtxt";
-        private const string ModelDirectory = ".";
+        private const string ModelDirectory = "model";
         private const string CatalogFile = "label_map.pbtxt";
         private const int ImageSize = 300;
 
