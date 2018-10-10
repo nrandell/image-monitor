@@ -24,4 +24,8 @@
     <PackageReference Include="TensorFlowSharp" Version="1.11.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
+  </ItemGroup>
+
 </Project>
