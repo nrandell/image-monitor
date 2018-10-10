@@ -58,6 +58,7 @@ namespace ImageSearch
                 {
                     foreach (var inputFile in Directory.EnumerateFiles(imageDirectory, "*.jpg", SearchOption.AllDirectories))
                     {
+                        cancellationToken.ThrowIfCancellationRequested();
                         batch.Add(Path.Combine(imageDirectory, inputFile));
                         if (batch.Count == batch.Capacity)
                         {
