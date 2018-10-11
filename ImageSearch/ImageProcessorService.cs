@@ -24,7 +24,9 @@ namespace ImageSearch
             Lifetime = lifetime;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        private Task _runner;
+
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             var modelConfig = ModelConfig.Value;
             if (string.IsNullOrWhiteSpace(modelConfig.OutputFileName))
@@ -43,6 +45,14 @@ namespace ImageSearch
             {
                 throw new ArgumentException("No batch size");
             }
+            _runner = Task.Factory.StartNew(RunAsync, TaskCreationOptions.LongRunning).Unwrap();
+            return Task.CompletedTask;
+        }
+
+        private async Task RunAsync()
+        {
+            var modelConfig = ModelConfig.Value;
+            var cancellationToken = Lifetime.ApplicationStopped;
 
             var loading = new GraphLoading(modelConfig.ModelToUse);
             var catalog = new Catalog(modelConfig.LabelsToUse);

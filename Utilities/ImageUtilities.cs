@@ -14,7 +14,7 @@ namespace Utilities
         {
             Exception[] exceptions = null;
 
-            var readingTasks = fileNames.Select(fileName => File.ReadAllBytesAsync(fileName, ct)).ToList();
+            var readingTasks = fileNames.Select(fileName => ReadTensorStringFromFile(fileName, ct)).ToList();
             try
             {
                 await Task.WhenAll(readingTasks).ConfigureAwait(false);
@@ -42,8 +42,7 @@ namespace Utilities
                     }
                     else
                     {
-                        var contents = readingTask.Result;
-                        batchTensors[batchIndex] = TFTensor.CreateString(contents);
+                        batchTensors[batchIndex] = readingTask.Result;
                         var batchInput = graph.Placeholder(TFDataType.String);
                         batchInputs[batchIndex] = batchInput;
                         var decoded = graph.DecodeJpeg(contents: batchInput, channels: 3, operName: $"Decode_jpeg_image_{batchIndex}");
@@ -74,6 +73,12 @@ namespace Utilities
                     return (normalized[0], exceptions);
                 }
             }
+        }
+
+        private static async Task<TFTensor> ReadTensorStringFromFile(string fileName, CancellationToken ct)
+        {
+            var content = await File.ReadAllBytesAsync(fileName, ct).ConfigureAwait(false);
+            return TFTensor.CreateString(content);
         }
 
         public static async Task<(TFTensor, TFOutput)> CreateTensorFromImageFile(string fileName, TFDataType destinationDataType, int size, CancellationToken ct)
